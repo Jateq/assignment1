@@ -1,33 +1,23 @@
 package system
 
-// User represents a user in the system.
 type User struct {
 	Username string
 	Password string
 }
 
-// UserRepository represents the user repository.
-type UserRepository struct {
-	users map[string]*User
+func (u *User) Register(username, password string) {
+	u.Username = username
+	u.Password = password
 }
 
-// NewUserRepository returns a new instance of the user repository.
-func NewUserRepository() *UserRepository {
-	return &UserRepository{
-		users: make(map[string]*User),
+func (u *User) Authorize(username, password string) bool {
+	return u.Username == username && u.Password == password
+}
+
+func (u *User) ChangePassword(oldPassword, newPassword string) bool {
+	if u.Password == oldPassword {
+		u.Password = newPassword
+		return true
 	}
-}
-
-// AddUser adds a user to the repository.
-func (ur *UserRepository) AddUser(username, password string) {
-	ur.users[username] = &User{Username: username, Password: password}
-}
-
-// AuthorizeUser authorizes a user in the repository.
-func (ur *UserRepository) AuthorizeUser(username, password string) bool {
-	user, ok := ur.users[username]
-	if !ok {
-		return false
-	}
-	return user.Password == password
+	return false
 }
